@@ -1,0 +1,18 @@
+header {
+    background-color: black;
+    height: 50px;
+    padding: 0px 15px;
+    width: 100vw;
+}
+
+#header__logo {
+    color: white;
+    font-size: 24px;
+    width: fit-content;
+    text-align: center;
+
+    & .cincos-box {
+        height: 38px;
+        margin: 0px auto;
+    }
+}

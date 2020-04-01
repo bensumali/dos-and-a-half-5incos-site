@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,3 +15,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('vue');
 });
+Route::get('/redirect', 'SocialAuthGoogleController@redirect');
+Route::get('/callback', 'SocialAuthGoogleController@callback');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

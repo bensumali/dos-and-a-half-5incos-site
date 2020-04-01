@@ -1,1 +1,39 @@
-//
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+// Variables
+@import 'variables';
+@import 'header';
+@import 'carousel';
+@import '~bulma/bulma';
+
+body {
+    margin: 0px;
+}
+.cincos-box {
+    display: block;
+    font-weight: bold;
+    padding: 5px 10px;
+    position: relative;
+    width: fit-content;
+
+    & .cincos-box__background {
+        background-color: #017F7E;
+        position: absolute;
+        height: 25px;
+        width: 100%;
+        top: 12px;
+        left: 0;
+    }
+    &:first-child .cincos-box__background {
+        transform: rotate(3deg);
+    }
+    &:nth-child(2) .cincos-box__background {
+        transform: rotate(-3deg);
+    }
+    & .cincos-box__text {
+        position: relative;
+    }
+}
+
+
