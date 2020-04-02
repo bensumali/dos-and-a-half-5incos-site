@@ -1,5 +1,5 @@
 <template>
-    <header>
+    <header id="header">
         <div id="header__logo">
             <div class="cincos-box">
                 <div class="cincos-box__background"></div>

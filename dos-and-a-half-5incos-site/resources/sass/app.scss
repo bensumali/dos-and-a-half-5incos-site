@@ -1,3 +1,4 @@
+@import '~@fortawesome/fontawesome-free/css/all.min.css';
 // Fonts
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 
@@ -6,6 +7,8 @@
 @import 'header';
 @import 'carousel';
 @import '~bulma/bulma';
+
+
 
 body {
     margin: 0px;
