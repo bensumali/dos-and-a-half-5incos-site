@@ -41,6 +41,26 @@
                         >
                         </vue-cropper>
                     </div>
+                    <div class="field">
+                        <label class="label">Movies</label>
+                        <div class="control">
+                            <v-select
+                                :map-keydown="searchTMDB"
+                                :options="search_results_movies"
+                                label="title"
+                                :placeholder="'Search for movies'"
+                                :inputId="'movie-search'"
+
+                            >
+                                <template v-slot:option="movie">
+                                    <span>
+                                        <img :src="'http://image.tmdb.org/t/p/w185/' + movie.poster_path"  />
+                                    </span>
+                                    {{ movie.title }}
+                                </template>
+                            </v-select>
+                        </div>
+                    </div>
                 </section>
                 <footer class="modal-card-foot">
                     <button class="button is-success">Save changes</button>
@@ -56,14 +76,20 @@
     import VueCropper from 'vue-cropperjs';
     import 'cropperjs/dist/cropper.css';
     import axios from 'axios';
+    import vSelect from 'vue-select'
+    import 'vue-select/dist/vue-select.css';
+
     export default {
         components: {
-          VueCropper
+          VueCropper, vSelect
         },
+
         data: function() {
             return {
                 cropImage: "",
+                movie_search: "fight",
                 photo: "",
+                search_results_movies: [],
                 showModal: false,
                 uploadedFile: null,
                 test: process.env.VUE_APP_TITLE
@@ -91,12 +117,16 @@
                 } else {
                     alert('Sorry, FileReader API not supported');
                 }
+            },
+            searchTMDB: function(map, vm) {
+                axios
+                    .get('https://api.themoviedb.org/3/search/movie?api_key='+ process.env.MIX_TMDB_API_KEY +'&query='+ encodeURI(document.getElementById('movie-search').value) +'&page=1')
+                    .then(response => (this.search_results_movies = response.data.results));
+                return map;
             }
         },
         mounted: function() {
-            axios
-                .get('https://api.themoviedb.org/3/movie/550?api_key=1c2b604f70ca7a756893b4d6c8eccc58')
-                .then(response => (console.log(response)))
+
         },
         name: "EpisodeList"
     }
