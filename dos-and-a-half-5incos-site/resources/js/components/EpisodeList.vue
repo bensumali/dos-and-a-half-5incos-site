@@ -9,6 +9,12 @@
                 </header>
                 <section class="modal-card-body">
                     <div class="field">
+                        <label class="label">Title</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Show me the title">
+                        </div>
+                    </div>
+                    <div class="field">
                         <label class="label">Photo</label>
                         <div class="file has-name is-fullwidth">
                             <label class="file-label">
@@ -22,17 +28,16 @@
                                     </span>
                                 </span>
                                 <span class="file-name">
-                                    Screen Shot 2017-07-29 at 15.54.25.png
+                                    <span v-if="uploadedFile">{{ uploadedFile.name }}</span>
                                 </span>
                             </label>
                         </div>
                     </div>
                     <div class="field">
                         <vue-cropper
+                            v-show="uploadedFile"
                             ref="cropper"
-                            :src="photo"
-                            alt="Source Image"
-                            :cropmove="cropImage"
+                            :aspect-ratio="1 / 1"
                         >
                         </vue-cropper>
                     </div>
@@ -50,6 +55,7 @@
 <script>
     import VueCropper from 'vue-cropperjs';
     import 'cropperjs/dist/cropper.css';
+    import axios from 'axios';
     export default {
         components: {
           VueCropper
@@ -58,7 +64,9 @@
             return {
                 cropImage: "",
                 photo: "",
-                showModal: false
+                showModal: false,
+                uploadedFile: null,
+                test: process.env.VUE_APP_TITLE
             }
         },
         methods: {
@@ -70,8 +78,25 @@
               this.showModal = true;
             },
             processFile: function(event) {
-                this.photo = URL.createObjectURL(event.target.files[0]);
+                const file = event.target.files[0];
+                if (typeof FileReader === 'function') {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        this.imgSrc = event.target.result;
+                        // rebuild cropperjs with the updated source
+                        this.$refs.cropper.replace(event.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                    this.uploadedFile = file;
+                } else {
+                    alert('Sorry, FileReader API not supported');
+                }
             }
+        },
+        mounted: function() {
+            axios
+                .get('https://api.themoviedb.org/3/movie/550?api_key=1c2b604f70ca7a756893b4d6c8eccc58')
+                .then(response => (console.log(response)))
         },
         name: "EpisodeList"
     }

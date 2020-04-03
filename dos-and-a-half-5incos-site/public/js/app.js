@@ -8063,10 +8063,12 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue_cropperjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-cropperjs */ "./node_modules/vue-cropperjs/dist/VueCropper.js");
+/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var vue_cropperjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-cropperjs */ "./node_modules/vue-cropperjs/dist/VueCropper.js");
 /* harmony import */ var vue_cropperjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_cropperjs__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var cropperjs_dist_cropper_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! cropperjs/dist/cropper.css */ "./node_modules/cropperjs/dist/cropper.css");
 /* harmony import */ var cropperjs_dist_cropper_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(cropperjs_dist_cropper_css__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
 //
 //
 //
@@ -8116,6 +8118,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -8126,7 +8134,9 @@ __webpack_require__.r(__webpack_exports__);
     return {
       cropImage: "",
       photo: "",
-      showModal: false
+      showModal: false,
+      uploadedFile: null,
+      test: process.env.VUE_APP_TITLE
     };
   },
   methods: {
@@ -8137,11 +8147,34 @@ __webpack_require__.r(__webpack_exports__);
       this.showModal = true;
     },
     processFile: function processFile(event) {
-      this.photo = URL.createObjectURL(event.target.files[0]);
+      var _this = this;
+
+      var file = event.target.files[0];
+
+      if (typeof FileReader === 'function') {
+        var reader = new FileReader();
+
+        reader.onload = function (event) {
+          _this.imgSrc = event.target.result; // rebuild cropperjs with the updated source
+
+          _this.$refs.cropper.replace(event.target.result);
+        };
+
+        reader.readAsDataURL(file);
+        this.uploadedFile = file;
+      } else {
+        alert('Sorry, FileReader API not supported');
+      }
     }
+  },
+  mounted: function mounted() {
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('https://api.themoviedb.org/3/movie/550?api_key=1c2b604f70ca7a756893b4d6c8eccc58').then(function (response) {
+      return console.log(response);
+    });
   },
   name: "EpisodeList"
 });
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/process/browser.js */ "./node_modules/process/browser.js")))
 
 /***/ }),
 
@@ -30380,6 +30413,8 @@ var render = function() {
         _vm._m(0),
         _vm._v(" "),
         _c("section", { staticClass: "modal-card-body" }, [
+          _vm._m(1),
+          _vm._v(" "),
           _c("div", { staticClass: "field" }, [
             _c("label", { staticClass: "label" }, [_vm._v("Photo")]),
             _vm._v(" "),
@@ -30395,12 +30430,12 @@ var render = function() {
                   }
                 }),
                 _vm._v(" "),
-                _vm._m(1),
+                _vm._m(2),
                 _vm._v(" "),
                 _c("span", { staticClass: "file-name" }, [
-                  _vm._v(
-                    "\n                                Screen Shot 2017-07-29 at 15.54.25.png\n                            "
-                  )
+                  _vm.uploadedFile
+                    ? _c("span", [_vm._v(_vm._s(_vm.uploadedFile.name))])
+                    : _vm._e()
                 ])
               ])
             ])
@@ -30411,19 +30446,23 @@ var render = function() {
             { staticClass: "field" },
             [
               _c("vue-cropper", {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.uploadedFile,
+                    expression: "uploadedFile"
+                  }
+                ],
                 ref: "cropper",
-                attrs: {
-                  src: _vm.photo,
-                  alt: "Source Image",
-                  cropmove: _vm.cropImage
-                }
+                attrs: { "aspect-ratio": 1 / 1 }
               })
             ],
             1
           )
         ]),
         _vm._v(" "),
-        _vm._m(2)
+        _vm._m(3)
       ])
     ]),
     _vm._v(" "),
@@ -30450,6 +30489,21 @@ var staticRenderFns = [
       _c("p", { staticClass: "modal-card-title" }, [_vm._v("Add new episode")]),
       _vm._v(" "),
       _c("button", { staticClass: "delete", attrs: { "aria-label": "close" } })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "field" }, [
+      _c("label", { staticClass: "label" }, [_vm._v("Title")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "control" }, [
+        _c("input", {
+          staticClass: "input",
+          attrs: { type: "text", placeholder: "Show me the title" }
+        })
+      ])
     ])
   },
   function() {
