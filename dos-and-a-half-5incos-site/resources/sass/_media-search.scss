@@ -1,0 +1,33 @@
+.media-poster{
+    width: 50px !important;
+    & img {
+        width: 50px !important;
+    }
+}
+.media-info {
+    display: inline-block;
+    font-weight:bold;
+    margin-left: 15px;
+    overflow: hidden;
+    vertical-align: top;
+}
+.media-title {
+    font-size: 16px;
+}
+.media-year {
+    color: rgba(0, 0, 0, 0.3);
+    font-size: 14px;
+}
+.media-other {
+    font-size: 12px;
+    font-weight: normal;
+}
+.vs__dropdown-option {
+    align-content: center;
+    padding: 8px !important;
+}
+.v-select ul {
+    overflow-x: hidden;
+    position: relative;
+    z-index: 5;
+}

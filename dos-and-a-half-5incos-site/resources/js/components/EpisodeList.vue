@@ -45,18 +45,29 @@
                         <label class="label">Movies</label>
                         <div class="control">
                             <v-select
-                                :map-keydown="searchTMDB"
+                                @search="searchTMDB"
                                 :options="search_results_movies"
                                 label="title"
                                 :placeholder="'Search for movies'"
                                 :inputId="'movie-search'"
+                                :closeOnSelect="false"
 
                             >
                                 <template v-slot:option="movie">
-                                    <span>
+                                    <span class="media-poster">
                                         <img :src="'http://image.tmdb.org/t/p/w185/' + movie.poster_path"  />
                                     </span>
-                                    {{ movie.title }}
+                                    <div class="media-info">
+                                        <div class="media-title">
+                                            {{ movie.title }}
+                                        </div>
+                                        <div class="media-year">
+                                            {{ movie.release_date | moment("YYYY") }}
+                                        </div>
+                                        <div class="media-other">
+                                            {{ movie.overview }}
+                                        </div>
+                                    </div>
                                 </template>
                             </v-select>
                         </div>
@@ -78,6 +89,7 @@
     import axios from 'axios';
     import vSelect from 'vue-select'
     import 'vue-select/dist/vue-select.css';
+    import _ from 'lodash';
 
     export default {
         components: {
@@ -96,6 +108,9 @@
             }
         },
         methods: {
+            debounce: function(fn, delay) {
+                  return _.debounce(fn, delay);
+            },
             hideModal: function() {
                 if(this.showModal)
                     this.showModal = false;
@@ -118,12 +133,14 @@
                     alert('Sorry, FileReader API not supported');
                 }
             },
-            searchTMDB: function(map, vm) {
-                axios
-                    .get('https://api.themoviedb.org/3/search/movie?api_key='+ process.env.MIX_TMDB_API_KEY +'&query='+ encodeURI(document.getElementById('movie-search').value) +'&page=1')
-                    .then(response => (this.search_results_movies = response.data.results));
-                return map;
-            }
+            searchTMDB: _.debounce(function(search, loading) {
+                let query = search;
+                if(query) {
+                    axios
+                        .get('https://api.themoviedb.org/3/search/movie?api_key='+ process.env.MIX_TMDB_API_KEY +'&query='+ encodeURI(query) +'&page=1')
+                        .then(response => (this.search_results_movies = response.data.results));
+                }
+            }, 200)
         },
         mounted: function() {
 
