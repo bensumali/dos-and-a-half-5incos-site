@@ -35,7 +35,12 @@ class EpisodeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $episode = new Episode();
+        $episode->title = $request->input('title');
+        $episode->save();
+
+        return response($episode, 200);
     }
 
     /**

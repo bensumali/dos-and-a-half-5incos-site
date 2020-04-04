@@ -6220,6 +6220,371 @@ var index = {
 
 /***/ }),
 
+/***/ "./node_modules/@vuex-orm/plugin-axios/dist/vuex-orm-axios.esm.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/@vuex-orm/plugin-axios/dist/vuex-orm-axios.esm.js ***!
+  \************************************************************************/
+/*! exports provided: default, Request, Response */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Request", function() { return Request; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Response", function() { return Response; });
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the
+License at http://www.apache.org/licenses/LICENSE-2.0
+
+THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+MERCHANTABLITY OR NON-INFRINGEMENT.
+
+See the Apache Version 2.0 License for specific language governing permissions
+and limitations under the License.
+***************************************************************************** */
+
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
+function __awaiter(thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+}
+
+function __generator(thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+}
+
+var Response = /** @class */ (function () {
+    /**
+     * Create a new response instance.
+     */
+    function Response(model, config, response) {
+        /**
+         * Entities created by Vuex ORM.
+         */
+        this.entities = null;
+        /**
+         * Whether if response data is saved to the store or not.
+         */
+        this.isSaved = false;
+        this.model = model;
+        this.config = config;
+        this.response = response;
+    }
+    /**
+     * Save response data to the store.
+     */
+    Response.prototype.save = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var data, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        data = this.getDataFromResponse();
+                        if (!this.validateData(data)) {
+                            console.warn('[Vuex ORM Axios] The response data could not be saved to the store because it\'s not an object or an array. You might want to use `dataTransformer` option to handle non-array/object response before saving it to the store.');
+                            return [2 /*return*/];
+                        }
+                        _a = this;
+                        return [4 /*yield*/, this.model.insertOrUpdate({ data: data })];
+                    case 1:
+                        _a.entities = _b.sent();
+                        this.isSaved = true;
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * Delete store record depending on `delete` option.
+     */
+    Response.prototype.delete = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (this.config.delete === undefined) {
+                            throw new Error('[Vuex ORM Axios] Could not delete records because the `delete` option is not set.');
+                        }
+                        return [4 /*yield*/, this.model.delete(this.config.delete)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * Get data from the given response object. If the `dataTransformer` config is
+     * provided, it tries to execute the method with the response as param. If the
+     * `dataKey` config is provided, it tries to fetch the data at that key.
+     */
+    Response.prototype.getDataFromResponse = function () {
+        if (this.config.dataTransformer) {
+            return this.config.dataTransformer(this.response);
+        }
+        if (this.config.dataKey) {
+            return this.response.data[this.config.dataKey];
+        }
+        return this.response.data;
+    };
+    /**
+     * Validate if the given data is insertable to Vuex ORM.
+     */
+    Response.prototype.validateData = function (data) {
+        return data !== null && typeof data === 'object';
+    };
+    return Response;
+}());
+
+var Request = /** @class */ (function () {
+    /**
+     * Create a new api instance.
+     */
+    function Request(model) {
+        /**
+         * The default config.
+         */
+        this.config = {
+            save: true
+        };
+        this.model = model;
+        this.registerActions();
+    }
+    Object.defineProperty(Request.prototype, "axios", {
+        /**
+         * Get the axios client.
+         */
+        get: function () {
+            if (!this.model.axios) {
+                throw new Error('[Vuex ORM Axios] The axios instance is not registered. Please register the axios instance to the model.');
+            }
+            return this.model.axios;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * Register actions from the model config.
+     */
+    Request.prototype.registerActions = function () {
+        var actions = this.model.apiConfig.actions;
+        if (!actions) {
+            return;
+        }
+        for (var name_1 in actions) {
+            var action = actions[name_1];
+            typeof action === 'function'
+                ? this.registerFunctionAction(name_1, action)
+                : this.registerObjectAction(name_1, action);
+        }
+    };
+    /**
+     * Register the given object action.
+     */
+    Request.prototype.registerObjectAction = function (name, action) {
+        var _this = this;
+        this[name] = function (config) {
+            return _this.request(__assign(__assign({}, action), config));
+        };
+    };
+    /**
+     * Register the given function action.
+     */
+    Request.prototype.registerFunctionAction = function (name, action) {
+        this[name] = action.bind(this);
+    };
+    /**
+     * Perform a get request.
+     */
+    Request.prototype.get = function (url, config) {
+        if (config === void 0) { config = {}; }
+        return this.request(__assign({ method: 'get', url: url }, config));
+    };
+    /**
+     * Perform a post request.
+     */
+    Request.prototype.post = function (url, data, config) {
+        if (data === void 0) { data = {}; }
+        if (config === void 0) { config = {}; }
+        return this.request(__assign({ method: 'post', url: url, data: data }, config));
+    };
+    /**
+     * Perform a put request.
+     */
+    Request.prototype.put = function (url, data, config) {
+        if (data === void 0) { data = {}; }
+        if (config === void 0) { config = {}; }
+        return this.request(__assign({ method: 'put', url: url, data: data }, config));
+    };
+    /**
+     * Perform a patch request.
+     */
+    Request.prototype.patch = function (url, data, config) {
+        if (data === void 0) { data = {}; }
+        if (config === void 0) { config = {}; }
+        return this.request(__assign({ method: 'patch', url: url, data: data }, config));
+    };
+    /**
+     * Perform a delete request.
+     */
+    Request.prototype.delete = function (url, config) {
+        if (config === void 0) { config = {}; }
+        return this.request(__assign({ method: 'delete', url: url }, config));
+    };
+    /**
+     * Perform an api request.
+     */
+    Request.prototype.request = function (config) {
+        return __awaiter(this, void 0, void 0, function () {
+            var requestConfig, axiosResponse;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        requestConfig = this.createConfig(config);
+                        return [4 /*yield*/, this.axios.request(requestConfig)];
+                    case 1:
+                        axiosResponse = _a.sent();
+                        return [2 /*return*/, this.createResponse(axiosResponse, requestConfig)];
+                }
+            });
+        });
+    };
+    /**
+     * Create a new config by merging the global config, the model config,
+     * and the given config.
+     */
+    Request.prototype.createConfig = function (config) {
+        return __assign(__assign(__assign(__assign({}, this.config), this.model.globalApiConfig), this.model.apiConfig), config);
+    };
+    /**
+     * Create a new response instance by applying a few initialization processes.
+     * For example, it saves response data if `save` option id set to `true`.
+     */
+    Request.prototype.createResponse = function (axiosResponse, config) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        response = new Response(this.model, config, axiosResponse);
+                        if (!(config.delete !== undefined)) return [3 /*break*/, 2];
+                        return [4 /*yield*/, response.delete()];
+                    case 1:
+                        _b.sent();
+                        return [2 /*return*/, response];
+                    case 2:
+                        _a = config.save;
+                        if (!_a) return [3 /*break*/, 4];
+                        return [4 /*yield*/, response.save()];
+                    case 3:
+                        _a = (_b.sent());
+                        _b.label = 4;
+                    case 4:
+                        return [2 /*return*/, response];
+                }
+            });
+        });
+    };
+    return Request;
+}());
+
+function Model(model, config) {
+    /**
+     * The api client.
+     */
+    model.axios = config.axios || null;
+    /**
+     * The global api configuration for all models.
+     */
+    model.globalApiConfig = config;
+    /**
+     * The api configuration for the model.
+     */
+    model.apiConfig = {};
+    /**
+     * Set the given api client.
+     */
+    model.setAxios = function (axios) {
+        this.axios = axios;
+    };
+    /**
+     * Get the api instance.
+     */
+    model.api = function () {
+        return new Request(this);
+    };
+}
+
+var VuexORMAxios = /** @class */ (function () {
+    /**
+     * Create a new Vuex ORM Axios instance.
+     */
+    function VuexORMAxios(components, config) {
+        this.model = components.Model;
+        this.config = config;
+    }
+    /**
+     * Plug in features.
+     */
+    VuexORMAxios.prototype.plugin = function () {
+        Model(this.model, this.config);
+    };
+    return VuexORMAxios;
+}());
+
+var index = {
+    install: function (components, config) {
+        (new VuexORMAxios(components, config)).plugin();
+    }
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (index);
+
+
+
+/***/ }),
+
 /***/ "./node_modules/axios/index.js":
 /*!*************************************!*\
   !*** ./node_modules/axios/index.js ***!
@@ -8075,6 +8440,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _models_Episode__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../models/Episode */ "./resources/js/models/Episode.js");
 //
 //
 //
@@ -8159,6 +8525,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+
 
 
 
@@ -8174,6 +8545,7 @@ __webpack_require__.r(__webpack_exports__);
     return {
       cropImage: "",
       movie_search: "fight",
+      episode_new: new _models_Episode__WEBPACK_IMPORTED_MODULE_6__["default"](),
       photo: "",
       search_results_movies: [],
       showModal: false,
@@ -8182,6 +8554,13 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    addEpisode: function addEpisode() {
+      var mypostparameters = new FormData();
+      mypostparameters.append('image', this.episode_new.image, this.episode_new.image.name);
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/api/files/', mypostparameters); // this.$store.dispatch('STORE_EPISODE', this.episode_new).then(function(d) {
+      //
+      // });
+    },
     debounce: function debounce(fn, delay) {
       return lodash__WEBPACK_IMPORTED_MODULE_5___default.a.debounce(fn, delay);
     },
@@ -8207,6 +8586,7 @@ __webpack_require__.r(__webpack_exports__);
 
         reader.readAsDataURL(file);
         this.uploadedFile = file;
+        this.episode_new.image = file;
       } else {
         alert('Sorry, FileReader API not supported');
       }
@@ -8221,7 +8601,8 @@ __webpack_require__.r(__webpack_exports__);
           return _this2.search_results_movies = response.data.results;
         });
       }
-    }, 200)
+    }, 200),
+    selectMovie: function selectMovie(val) {}
   },
   mounted: function mounted() {},
   name: "EpisodeList"
@@ -30484,7 +30865,33 @@ var render = function() {
         _vm._m(0),
         _vm._v(" "),
         _c("section", { staticClass: "modal-card-body" }, [
-          _vm._m(1),
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "label" }, [_vm._v("Title")]),
+            _vm._v(" "),
+            _c("div", { staticClass: "control" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.episode_new.title,
+                    expression: "episode_new.title"
+                  }
+                ],
+                staticClass: "input",
+                attrs: { type: "text", placeholder: "Show me the title" },
+                domProps: { value: _vm.episode_new.title },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.episode_new, "title", $event.target.value)
+                  }
+                }
+              })
+            ])
+          ]),
           _vm._v(" "),
           _c("div", { staticClass: "field" }, [
             _c("label", { staticClass: "label" }, [_vm._v("Photo")]),
@@ -30501,7 +30908,7 @@ var render = function() {
                   }
                 }),
                 _vm._v(" "),
-                _vm._m(2),
+                _vm._m(1),
                 _vm._v(" "),
                 _c("span", { staticClass: "file-name" }, [
                   _vm.uploadedFile
@@ -30546,7 +30953,7 @@ var render = function() {
                     placeholder: "Search for movies",
                     inputId: "movie-search"
                   },
-                  on: { search: _vm.searchTMDB },
+                  on: { search: _vm.searchTMDB, input: _vm.selectMovie },
                   scopedSlots: _vm._u([
                     {
                       key: "option",
@@ -30600,11 +31007,28 @@ var render = function() {
                 })
               ],
               1
-            )
+            ),
+            _vm._v(" "),
+            _c("div", { attrs: { id: "movie-list" } })
           ])
         ]),
         _vm._v(" "),
-        _vm._m(3)
+        _c("footer", { staticClass: "modal-card-foot" }, [
+          _c(
+            "button",
+            {
+              staticClass: "button is-success",
+              on: {
+                click: function($event) {
+                  return _vm.addEpisode()
+                }
+              }
+            },
+            [_vm._v("Add")]
+          ),
+          _vm._v(" "),
+          _c("button", { staticClass: "button" }, [_vm._v("Cancel")])
+        ])
       ])
     ]),
     _vm._v(" "),
@@ -30637,21 +31061,6 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "field" }, [
-      _c("label", { staticClass: "label" }, [_vm._v("Title")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "control" }, [
-        _c("input", {
-          staticClass: "input",
-          attrs: { type: "text", placeholder: "Show me the title" }
-        })
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("span", { staticClass: "file-cta" }, [
       _c("span", { staticClass: "file-icon" }, [
         _c("i", { staticClass: "fas fa-upload" })
@@ -30662,18 +31071,6 @@ var staticRenderFns = [
           "\n                                    Choose a file…\n                                "
         )
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("footer", { staticClass: "modal-card-foot" }, [
-      _c("button", { staticClass: "button is-success" }, [
-        _vm._v("Save changes")
-      ]),
-      _vm._v(" "),
-      _c("button", { staticClass: "button" }, [_vm._v("Cancel")])
     ])
   }
 ]
@@ -52040,6 +52437,152 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/models/Episode.js":
+/*!****************************************!*\
+  !*** ./resources/js/models/Episode.js ***!
+  \****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Episode; });
+/* harmony import */ var _vuex_orm_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @vuex-orm/core */ "./node_modules/@vuex-orm/core/dist/vuex-orm.esm.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+var Episode = /*#__PURE__*/function (_Model) {
+  _inherits(Episode, _Model);
+
+  var _super = _createSuper(Episode);
+
+  function Episode() {
+    _classCallCheck(this, Episode);
+
+    return _super.apply(this, arguments);
+  }
+
+  _createClass(Episode, null, [{
+    key: "fields",
+    // This is the name used as module name of the Vuex Store.
+    // List of all fields (schema) of the post model. `this.attr` is used
+    // for the generic field type. The argument is the default value.
+    value: function fields() {
+      return {
+        id: this.uid(),
+        title: this.attr(''),
+        image: this.attr(''),
+        photo_path: this.attr(''),
+        date_recorded: this.attr(''),
+        date_published: this.attr(''),
+        created_at: this.attr('')
+      };
+    }
+  }]);
+
+  return Episode;
+}(_vuex_orm_core__WEBPACK_IMPORTED_MODULE_0__["Model"]);
+
+_defineProperty(Episode, "entity", 'episodes');
+
+
+
+/***/ }),
+
+/***/ "./resources/js/models/User.js":
+/*!*************************************!*\
+  !*** ./resources/js/models/User.js ***!
+  \*************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return User; });
+/* harmony import */ var _vuex_orm_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @vuex-orm/core */ "./node_modules/@vuex-orm/core/dist/vuex-orm.esm.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+var User = /*#__PURE__*/function (_Model) {
+  _inherits(User, _Model);
+
+  var _super = _createSuper(User);
+
+  function User() {
+    _classCallCheck(this, User);
+
+    return _super.apply(this, arguments);
+  }
+
+  _createClass(User, null, [{
+    key: "fields",
+    // This is the name used as module name of the Vuex Store.
+    // List of all fields (schema) of the post model. `this.attr` is used
+    // for the generic field type. The argument is the default value.
+    value: function fields() {
+      return {
+        id: this.attr(null),
+        name: this.attr(''),
+        email: this.attr('')
+      };
+    }
+  }]);
+
+  return User;
+}(_vuex_orm_core__WEBPACK_IMPORTED_MODULE_0__["Model"]);
+
+_defineProperty(User, "entity", 'users');
+
+
+
+/***/ }),
+
 /***/ "./resources/js/pages/Home.vue":
 /*!*************************************!*\
   !*** ./resources/js/pages/Home.vue ***!
@@ -52134,6 +52677,29 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
 
 /***/ }),
 
+/***/ "./resources/js/store/actions.js":
+/*!***************************************!*\
+  !*** ./resources/js/store/actions.js ***!
+  \***************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _models_Episode__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../models/Episode */ "./resources/js/models/Episode.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+
+
+var actions = {
+  STORE_EPISODE: function STORE_EPISODE(context, payload) {
+    return _models_Episode__WEBPACK_IMPORTED_MODULE_0__["default"].api().post('/api/episodes/', payload);
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = (actions);
+
+/***/ }),
+
 /***/ "./resources/js/store/index.js":
 /*!*************************************!*\
   !*** ./resources/js/store/index.js ***!
@@ -52146,17 +52712,31 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-/* harmony import */ var _vuex_orm_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @vuex-orm/core */ "./node_modules/@vuex-orm/core/dist/vuex-orm.esm.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./actions */ "./resources/js/store/actions.js");
+/* harmony import */ var _models_User__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../models/User */ "./resources/js/models/User.js");
+/* harmony import */ var _vuex_orm_core__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @vuex-orm/core */ "./node_modules/@vuex-orm/core/dist/vuex-orm.esm.js");
+/* harmony import */ var _vuex_orm_plugin_axios__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @vuex-orm/plugin-axios */ "./node_modules/@vuex-orm/plugin-axios/dist/vuex-orm-axios.esm.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_6__);
 
 
 
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]); // Create a new database instance.
 
-var database = new _vuex_orm_core__WEBPACK_IMPORTED_MODULE_2__["default"].Database(); // Register Models to the database.
+
+
+
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
+_vuex_orm_core__WEBPACK_IMPORTED_MODULE_4__["default"].use(_vuex_orm_plugin_axios__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  axios: axios__WEBPACK_IMPORTED_MODULE_6___default.a
+}); // Create a new database instance.
+
+var database = new _vuex_orm_core__WEBPACK_IMPORTED_MODULE_4__["default"].Database();
+database.register(_models_User__WEBPACK_IMPORTED_MODULE_3__["default"]); // Register Models to the database.
 // Create Vuex Store and register database through Vuex ORM.
 
 var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
-  plugins: [_vuex_orm_core__WEBPACK_IMPORTED_MODULE_2__["default"].install(database)]
+  actions: _actions__WEBPACK_IMPORTED_MODULE_2__["default"],
+  plugins: [_vuex_orm_core__WEBPACK_IMPORTED_MODULE_4__["default"].install(database)]
 });
 /* harmony default export */ __webpack_exports__["default"] = (store);
 

@@ -11,7 +11,7 @@
                     <div class="field">
                         <label class="label">Title</label>
                         <div class="control">
-                            <input class="input" type="text" placeholder="Show me the title">
+                            <input v-model="episode_new.title" class="input" type="text" placeholder="Show me the title">
                         </div>
                     </div>
                     <div class="field">
@@ -46,6 +46,7 @@
                         <div class="control">
                             <v-select
                                 @search="searchTMDB"
+                                @input="selectMovie"
                                 :options="search_results_movies"
                                 label="title"
                                 :placeholder="'Search for movies'"
@@ -70,10 +71,13 @@
                                 </template>
                             </v-select>
                         </div>
+                        <div id="movie-list">
+
+                        </div>
                     </div>
                 </section>
                 <footer class="modal-card-foot">
-                    <button class="button is-success">Save changes</button>
+                    <button @click="addEpisode()" class="button is-success">Add</button>
                     <button class="button">Cancel</button>
                 </footer>
             </div>
@@ -89,16 +93,17 @@
     import vSelect from 'vue-select'
     import 'vue-select/dist/vue-select.css';
     import _ from 'lodash';
+    import Episode from "../models/Episode";
 
     export default {
         components: {
           VueCropper, vSelect
         },
-
         data: function() {
             return {
                 cropImage: "",
                 movie_search: "fight",
+                episode_new: new Episode(),
                 photo: "",
                 search_results_movies: [],
                 showModal: false,
@@ -107,6 +112,14 @@
             }
         },
         methods: {
+            addEpisode: function() {
+                const mypostparameters= new FormData()
+                mypostparameters.append('image', this.episode_new.image, this.episode_new.image.name);
+                axios.post('/api/files/', mypostparameters);
+                // this.$store.dispatch('STORE_EPISODE', this.episode_new).then(function(d) {
+                //
+                // });
+            },
             debounce: function(fn, delay) {
                   return _.debounce(fn, delay);
             },
@@ -128,6 +141,7 @@
                     };
                     reader.readAsDataURL(file);
                     this.uploadedFile = file;
+                    this.episode_new.image = file;
                 } else {
                     alert('Sorry, FileReader API not supported');
                 }
@@ -139,7 +153,10 @@
                         .get('https://api.themoviedb.org/3/search/movie?api_key='+ process.env.MIX_TMDB_API_KEY +'&query='+ encodeURI(query) +'&page=1')
                         .then(response => (this.search_results_movies = response.data.results));
                 }
-            }, 200)
+            }, 200),
+            selectMovie: function(val) {
+
+            }
         },
         mounted: function() {
 
