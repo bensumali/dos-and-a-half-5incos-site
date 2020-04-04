@@ -16,7 +16,7 @@ class CreateEpisodesTable extends Migration
         Schema::create('episodes', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('photo_path')->nullable();
+            $table->unsignedBigInteger('photo_file_id')->nullable();
             $table->timestamps();
         });
     }

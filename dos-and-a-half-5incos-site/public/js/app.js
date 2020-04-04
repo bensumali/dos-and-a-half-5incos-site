@@ -8555,9 +8555,13 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     addEpisode: function addEpisode() {
-      var mypostparameters = new FormData();
-      mypostparameters.append('image', this.episode_new.image, this.episode_new.image.name);
-      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/api/files/', mypostparameters); // this.$store.dispatch('STORE_EPISODE', this.episode_new).then(function(d) {
+      var _this = this;
+
+      this.$refs.cropper.getCroppedCanvas().toBlob(function (blob) {
+        var mypostparameters = new FormData();
+        mypostparameters.append('image', blob, _this.episode_new.image.name);
+        axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/api/files/', mypostparameters);
+      }); // this.$store.dispatch('STORE_EPISODE', this.episode_new).then(function(d) {
       //
       // });
     },
@@ -8571,7 +8575,7 @@ __webpack_require__.r(__webpack_exports__);
       this.showModal = true;
     },
     processFile: function processFile(event) {
-      var _this = this;
+      var _this2 = this;
 
       var file = event.target.files[0];
 
@@ -8579,9 +8583,9 @@ __webpack_require__.r(__webpack_exports__);
         var reader = new FileReader();
 
         reader.onload = function (event) {
-          _this.imgSrc = event.target.result; // rebuild cropperjs with the updated source
+          _this2.imgSrc = event.target.result; // rebuild cropperjs with the updated source
 
-          _this.$refs.cropper.replace(event.target.result);
+          _this2.$refs.cropper.replace(event.target.result);
         };
 
         reader.readAsDataURL(file);
@@ -8592,13 +8596,13 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     searchTMDB: lodash__WEBPACK_IMPORTED_MODULE_5___default.a.debounce(function (search, loading) {
-      var _this2 = this;
+      var _this3 = this;
 
       var query = search;
 
       if (query) {
         axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('https://api.themoviedb.org/3/search/movie?api_key=' + "1c2b604f70ca7a756893b4d6c8eccc58" + '&query=' + encodeURI(query) + '&page=1').then(function (response) {
-          return _this2.search_results_movies = response.data.results;
+          return _this3.search_results_movies = response.data.results;
         });
       }
     }, 200),

@@ -113,9 +113,11 @@
         },
         methods: {
             addEpisode: function() {
-                const mypostparameters= new FormData()
-                mypostparameters.append('image', this.episode_new.image, this.episode_new.image.name);
-                axios.post('/api/files/', mypostparameters);
+                this.$refs.cropper.getCroppedCanvas().toBlob((blob) => {
+                    const mypostparameters= new FormData();
+                    mypostparameters.append('image', blob, this.episode_new.image.name);
+                    axios.post('/api/files/', mypostparameters);
+                });
                 // this.$store.dispatch('STORE_EPISODE', this.episode_new).then(function(d) {
                 //
                 // });
