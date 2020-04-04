@@ -94,6 +94,7 @@
     import 'vue-select/dist/vue-select.css';
     import _ from 'lodash';
     import Episode from "../models/Episode";
+    import File from "../models/File";
 
     export default {
         components: {
@@ -116,11 +117,18 @@
                 this.$refs.cropper.getCroppedCanvas().toBlob((blob) => {
                     const mypostparameters= new FormData();
                     mypostparameters.append('image', blob, this.episode_new.image.name);
-                    axios.post('/api/files/', mypostparameters);
+                    axios.post('/api/files/', mypostparameters).then(
+                        function(response) {
+                            File.insert({
+                                data: response.data
+                            });
+                            this.episode_new.photo_file_id = response.data.id;
+                            this.$store.dispatch('STORE_EPISODE', this.episode_new).then(function(d) {
+
+                            });
+                        }.bind(this)
+                    );
                 });
-                // this.$store.dispatch('STORE_EPISODE', this.episode_new).then(function(d) {
-                //
-                // });
             },
             debounce: function(fn, delay) {
                   return _.debounce(fn, delay);

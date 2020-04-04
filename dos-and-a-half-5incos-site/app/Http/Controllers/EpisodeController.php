@@ -38,6 +38,7 @@ class EpisodeController extends Controller
 
         $episode = new Episode();
         $episode->title = $request->input('title');
+        $episode->photo_file_id = $request->input('photo_file_id');
         $episode->save();
 
         return response($episode, 200);

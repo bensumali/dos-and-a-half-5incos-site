@@ -11,7 +11,7 @@ export default class Episode extends Model {
             id: this.uid(),
             title: this.attr(''),
             image: this.attr(''),
-            photo_path: this.attr(''),
+            photo_file_id: this.attr(''),
             date_recorded: this.attr(''),
             date_published: this.attr(''),
             created_at: this.attr(''),
