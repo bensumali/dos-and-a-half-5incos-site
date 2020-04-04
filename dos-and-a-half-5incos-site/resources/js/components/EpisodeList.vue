@@ -50,12 +50,11 @@
                                 label="title"
                                 :placeholder="'Search for movies'"
                                 :inputId="'movie-search'"
-                                :closeOnSelect="false"
-
                             >
                                 <template v-slot:option="movie">
                                     <span class="media-poster">
-                                        <img :src="'http://image.tmdb.org/t/p/w185/' + movie.poster_path"  />
+                                        <img v-if="movie.poster_path" :src="'http://image.tmdb.org/t/p/w185/' + movie.poster_path"  />
+                                        <img v-else src="img/poster-placeholder.png"/>
                                     </span>
                                     <div class="media-info">
                                         <div class="media-title">

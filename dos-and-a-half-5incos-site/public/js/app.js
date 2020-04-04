@@ -8159,7 +8159,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 
 
@@ -30545,8 +30544,7 @@ var render = function() {
                     options: _vm.search_results_movies,
                     label: "title",
                     placeholder: "Search for movies",
-                    inputId: "movie-search",
-                    closeOnSelect: false
+                    inputId: "movie-search"
                   },
                   on: { search: _vm.searchTMDB },
                   scopedSlots: _vm._u([
@@ -30555,13 +30553,17 @@ var render = function() {
                       fn: function(movie) {
                         return [
                           _c("span", { staticClass: "media-poster" }, [
-                            _c("img", {
-                              attrs: {
-                                src:
-                                  "http://image.tmdb.org/t/p/w185/" +
-                                  movie.poster_path
-                              }
-                            })
+                            movie.poster_path
+                              ? _c("img", {
+                                  attrs: {
+                                    src:
+                                      "http://image.tmdb.org/t/p/w185/" +
+                                      movie.poster_path
+                                  }
+                                })
+                              : _c("img", {
+                                  attrs: { src: "img/poster-placeholder.png" }
+                                })
                           ]),
                           _vm._v(" "),
                           _c("div", { staticClass: "media-info" }, [
