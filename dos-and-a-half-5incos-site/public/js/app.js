@@ -31038,36 +31038,48 @@ var render = function() {
             _vm._v(" "),
             _c(
               "div",
-              { attrs: { id: "movie-list" } },
+              {
+                staticClass: "columns is-multiline",
+                attrs: { id: "movie-list" }
+              },
               _vm._l(_vm.episode_new.movies, function(movie, index) {
-                return _c("div", { staticClass: "movie-in-episode-card" }, [
-                  _c("div", { staticClass: "movie-in-episode-card__poster" }, [
-                    _c("img", {
-                      attrs: {
-                        src:
-                          "http://image.tmdb.org/t/p/w185/" + movie.poster_path
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "movie-in-episode-card__info" }, [
+                return _c(
+                  "div",
+                  { staticClass: "movie-in-episode-card column is-3" },
+                  [
                     _c(
                       "div",
-                      { staticClass: "movie-in-episode-card__info__title" },
-                      [_vm._v(_vm._s(movie.title))]
+                      { staticClass: "movie-in-episode-card__poster" },
+                      [
+                        _c("img", {
+                          attrs: {
+                            src:
+                              "http://image.tmdb.org/t/p/w185/" +
+                              movie.poster_path
+                          }
+                        })
+                      ]
                     ),
                     _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "movie-in-episode-card__info__year" },
-                      [
-                        _vm._v(
-                          _vm._s(_vm._f("moment")(movie.release_date, "YYYY"))
-                        )
-                      ]
-                    )
-                  ])
-                ])
+                    _c("div", { staticClass: "movie-in-episode-card__info" }, [
+                      _c(
+                        "div",
+                        { staticClass: "movie-in-episode-card__info__title" },
+                        [_vm._v(_vm._s(movie.title))]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "movie-in-episode-card__info__year" },
+                        [
+                          _vm._v(
+                            _vm._s(_vm._f("moment")(movie.release_date, "YYYY"))
+                          )
+                        ]
+                      )
+                    ])
+                  ]
+                )
               }),
               0
             )

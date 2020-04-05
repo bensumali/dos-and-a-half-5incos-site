@@ -71,8 +71,8 @@
                                 </template>
                             </v-select>
                         </div>
-                        <div id="movie-list">
-                            <div class="movie-in-episode-card" v-for="(movie, index) in episode_new.movies">
+                        <div id="movie-list" class="columns is-multiline">
+                            <div class="movie-in-episode-card column is-3" v-for="(movie, index) in episode_new.movies">
                                 <div class="movie-in-episode-card__poster">
                                     <img :src="'http://image.tmdb.org/t/p/w185/' + movie.poster_path" />
                                 </div>
