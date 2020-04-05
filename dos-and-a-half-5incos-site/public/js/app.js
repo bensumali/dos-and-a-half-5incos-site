@@ -8443,6 +8443,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _models_Episode__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../models/Episode */ "./resources/js/models/Episode.js");
 /* harmony import */ var _models_File__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../models/File */ "./resources/js/models/File.js");
 /* harmony import */ var _models_Movie__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../models/Movie */ "./resources/js/models/Movie.js");
+/* harmony import */ var _models_EpisodeMovie__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../models/EpisodeMovie */ "./resources/js/models/EpisodeMovie.js");
 //
 //
 //
@@ -8539,6 +8540,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+
 
 
 
@@ -8587,6 +8590,14 @@ __webpack_require__.r(__webpack_exports__);
     hideModal: function hideModal() {
       if (this.showModal) this.showModal = false;
     },
+    insertNewEpisodeIntoORM: function insertNewEpisodeIntoORM() {
+      _models_Episode__WEBPACK_IMPORTED_MODULE_6__["default"]["new"]().then(function (entities) {
+        this.episode_new = entities;
+      }.bind(this));
+    },
+    isMovieInEpisode: function isMovieInEpisode(movie) {
+      return _models_EpisodeMovie__WEBPACK_IMPORTED_MODULE_9__["default"].query().where('episode_id', this.episode_new.id).where('movie_id', parseInt(movie.id)).get().length > 0;
+    },
     displayModal: function displayModal() {
       this.showModal = true;
     },
@@ -8623,15 +8634,28 @@ __webpack_require__.r(__webpack_exports__);
       }
     }, 200),
     selectMovie: function selectMovie(val) {
-      var movieToAdd = new _models_Movie__WEBPACK_IMPORTED_MODULE_8__["default"]();
-      movieToAdd.id = val.id;
-      movieToAdd.title = val.title;
-      movieToAdd.release_date = val.release_date;
-      movieToAdd.poster_path = val.poster_path;
-      this.episode_new.movies.push(movieToAdd);
+      _models_Movie__WEBPACK_IMPORTED_MODULE_8__["default"].insert({
+        data: {
+          id: val.id,
+          title: val.title,
+          release_date: val.release_date,
+          poster_path: val.poster_path
+        }
+      }).then(function (entities) {
+        this.episode_new.movies.push(entities.movies[0]);
+        _models_Episode__WEBPACK_IMPORTED_MODULE_6__["default"].insert({
+          data: this.episode_new
+        }).then(function (entities) {
+          this.episode_new = entities.episodes[0];
+          this.episode_new.movies = entities.movies;
+          this.episode_new.episode_movies = entities.episode_movies;
+        }.bind(this));
+      }.bind(this));
     }
   },
-  mounted: function mounted() {},
+  mounted: function mounted() {
+    this.insertNewEpisodeIntoORM();
+  },
   name: "EpisodeList"
 });
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/process/browser.js */ "./node_modules/process/browser.js")))
@@ -30978,7 +31002,10 @@ var render = function() {
                     options: _vm.search_results_movies,
                     label: "title",
                     placeholder: "Search for movies",
-                    inputId: "movie-search"
+                    inputId: "movie-search",
+                    selectable: function(movie) {
+                      return !_vm.isMovieInEpisode(movie)
+                    }
                   },
                   on: { search: _vm.searchTMDB, input: _vm.selectMovie },
                   scopedSlots: _vm._u([
@@ -52586,6 +52613,8 @@ var Episode = /*#__PURE__*/function (_Model) {
 
 _defineProperty(Episode, "entity", 'episodes');
 
+_defineProperty(Episode, "primaryKey", "id");
+
 
 
 /***/ }),
@@ -52658,6 +52687,8 @@ var EpisodeMovie = /*#__PURE__*/function (_Model) {
 }(_vuex_orm_core__WEBPACK_IMPORTED_MODULE_0__["Model"]);
 
 _defineProperty(EpisodeMovie, "entity", 'episode_movie');
+
+_defineProperty(EpisodeMovie, "primaryKey", ['episode_id', 'movie_id']);
 
 
 
@@ -52801,6 +52832,8 @@ var Movie = /*#__PURE__*/function (_Model) {
 }(_vuex_orm_core__WEBPACK_IMPORTED_MODULE_0__["Model"]);
 
 _defineProperty(Movie, "entity", 'movies');
+
+_defineProperty(Movie, "primaryKey", 'id');
 
 
 

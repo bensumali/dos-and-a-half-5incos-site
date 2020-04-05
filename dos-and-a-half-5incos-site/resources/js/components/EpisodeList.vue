@@ -51,6 +51,7 @@
                                 label="title"
                                 :placeholder="'Search for movies'"
                                 :inputId="'movie-search'"
+                                :selectable="movie => !isMovieInEpisode(movie)"
                             >
                                 <template v-slot:option="movie">
                                     <span class="media-poster">
@@ -104,6 +105,7 @@
     import Episode from "../models/Episode";
     import File from "../models/File";
     import Movie from "../models/Movie";
+    import EpisodeMovie from "../models/EpisodeMovie";
 
     export default {
         components: {
@@ -146,6 +148,15 @@
                 if(this.showModal)
                     this.showModal = false;
             },
+            insertNewEpisodeIntoORM: function() {
+                Episode.new().then(function(entities) {
+                    this.episode_new = entities
+                }.bind(this));
+
+            },
+            isMovieInEpisode: function(movie) {
+                return EpisodeMovie.query().where('episode_id', this.episode_new.id).where( 'movie_id', parseInt(movie.id)).get().length > 0;
+            },
             displayModal: function() {
               this.showModal = true;
             },
@@ -174,17 +185,27 @@
                 }
             }, 200),
             selectMovie: function(val) {
-                const movieToAdd = new Movie();
-                movieToAdd.id = val.id;
-                movieToAdd.title = val.title;
-                movieToAdd.release_date = val.release_date;
-                movieToAdd.poster_path = val.poster_path;
-
-                this.episode_new.movies.push(movieToAdd);
+                Movie.insert({
+                    data: {
+                        id: val.id,
+                        title: val.title,
+                        release_date: val.release_date,
+                        poster_path: val.poster_path,
+                    }
+                }).then(function(entities) {
+                    this.episode_new.movies.push(entities.movies[0]);
+                    Episode.insert({
+                        data: this.episode_new
+                    }).then(function(entities) {
+                        this.episode_new = entities.episodes[0];
+                        this.episode_new.movies = entities.movies;
+                        this.episode_new.episode_movies = entities.episode_movies;
+                    }.bind(this))
+                }.bind(this));
             }
         },
         mounted: function() {
-
+            this.insertNewEpisodeIntoORM();
         },
         name: "EpisodeList"
     }
