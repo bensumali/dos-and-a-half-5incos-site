@@ -1,10 +1,8 @@
 import { Model } from '@vuex-orm/core'
-import Movie from "./Movie";
-import EpisodeMovie from "./EpisodeMovie";
 
-export default class Episode extends Model {
+export default class Movie extends Model {
     // This is the name used as module name of the Vuex Store.
-    static entity = 'episodes';
+    static entity = 'movies';
 
     // List of all fields (schema) of the post model. `this.attr` is used
     // for the generic field type. The argument is the default value.
@@ -12,13 +10,9 @@ export default class Episode extends Model {
         return {
             id: this.uid(),
             title: this.attr(''),
-            image: this.attr(''),
-            photo_file_id: this.attr(''),
-            date_recorded: this.attr(''),
-            date_published: this.attr(''),
+            release_date: this.attr(''),
+            poster_path: this.attr(''),
             created_at: this.attr(''),
-
-            movies: this.belongsToMany(Movie, EpisodeMovie, 'episode_id', 'movie_id'),
         }
     }
 }

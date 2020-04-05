@@ -72,7 +72,15 @@
                             </v-select>
                         </div>
                         <div id="movie-list">
-
+                            <div class="movie-in-episode-card" v-for="(movie, index) in episode_new.movies">
+                                <div class="movie-in-episode-card__poster">
+                                    <img :src="'http://image.tmdb.org/t/p/w185/' + movie.poster_path" />
+                                </div>
+                                <div class="movie-in-episode-card__info">
+                                    <div class="movie-in-episode-card__info__title">{{ movie.title }}</div>
+                                    <div class="movie-in-episode-card__info__year">{{ movie.release_date | moment("YYYY") }}</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -95,6 +103,7 @@
     import _ from 'lodash';
     import Episode from "../models/Episode";
     import File from "../models/File";
+    import Movie from "../models/Movie";
 
     export default {
         components: {
@@ -165,7 +174,13 @@
                 }
             }, 200),
             selectMovie: function(val) {
+                const movieToAdd = new Movie();
+                movieToAdd.id = val.id;
+                movieToAdd.title = val.title;
+                movieToAdd.release_date = val.release_date;
+                movieToAdd.poster_path = val.poster_path;
 
+                this.episode_new.movies.push(movieToAdd);
             }
         },
         mounted: function() {

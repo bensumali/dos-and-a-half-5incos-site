@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         $userAccounts = array(
           ["Ben Sumali", "bensumali@gmail.com", "whocares"]
         );
+
         foreach($userAccounts as $user) {
             $account = new \App\User();
             $account->name = $user[0];
@@ -21,6 +22,7 @@ class DatabaseSeeder extends Seeder
             $account->password = $user[2];
             $account->save();
         }
+
         // $this->call(UserSeeder::class);
     }
 }

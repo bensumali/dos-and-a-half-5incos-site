@@ -8442,6 +8442,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _models_Episode__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../models/Episode */ "./resources/js/models/Episode.js");
 /* harmony import */ var _models_File__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../models/File */ "./resources/js/models/File.js");
+/* harmony import */ var _models_Movie__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../models/Movie */ "./resources/js/models/Movie.js");
 //
 //
 //
@@ -8530,6 +8531,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -8612,7 +8622,14 @@ __webpack_require__.r(__webpack_exports__);
         });
       }
     }, 200),
-    selectMovie: function selectMovie(val) {}
+    selectMovie: function selectMovie(val) {
+      var movieToAdd = new _models_Movie__WEBPACK_IMPORTED_MODULE_8__["default"]();
+      movieToAdd.id = val.id;
+      movieToAdd.title = val.title;
+      movieToAdd.release_date = val.release_date;
+      movieToAdd.poster_path = val.poster_path;
+      this.episode_new.movies.push(movieToAdd);
+    }
   },
   mounted: function mounted() {},
   name: "EpisodeList"
@@ -31019,7 +31036,41 @@ var render = function() {
               1
             ),
             _vm._v(" "),
-            _c("div", { attrs: { id: "movie-list" } })
+            _c(
+              "div",
+              { attrs: { id: "movie-list" } },
+              _vm._l(_vm.episode_new.movies, function(movie, index) {
+                return _c("div", { staticClass: "movie-in-episode-card" }, [
+                  _c("div", { staticClass: "movie-in-episode-card__poster" }, [
+                    _c("img", {
+                      attrs: {
+                        src:
+                          "http://image.tmdb.org/t/p/w185/" + movie.poster_path
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "movie-in-episode-card__info" }, [
+                    _c(
+                      "div",
+                      { staticClass: "movie-in-episode-card__info__title" },
+                      [_vm._v(_vm._s(movie.title))]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "movie-in-episode-card__info__year" },
+                      [
+                        _vm._v(
+                          _vm._s(_vm._f("moment")(movie.release_date, "YYYY"))
+                        )
+                      ]
+                    )
+                  ])
+                ])
+              }),
+              0
+            )
           ])
         ]),
         _vm._v(" "),
@@ -52458,6 +52509,8 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Episode; });
 /* harmony import */ var _vuex_orm_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @vuex-orm/core */ "./node_modules/@vuex-orm/core/dist/vuex-orm.esm.js");
+/* harmony import */ var _Movie__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Movie */ "./resources/js/models/Movie.js");
+/* harmony import */ var _EpisodeMovie__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./EpisodeMovie */ "./resources/js/models/EpisodeMovie.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -52481,6 +52534,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
 
 
 
@@ -52508,7 +52563,8 @@ var Episode = /*#__PURE__*/function (_Model) {
         photo_file_id: this.attr(''),
         date_recorded: this.attr(''),
         date_published: this.attr(''),
-        created_at: this.attr('')
+        created_at: this.attr(''),
+        movies: this.belongsToMany(_Movie__WEBPACK_IMPORTED_MODULE_1__["default"], _EpisodeMovie__WEBPACK_IMPORTED_MODULE_2__["default"], 'episode_id', 'movie_id')
       };
     }
   }]);
@@ -52517,6 +52573,79 @@ var Episode = /*#__PURE__*/function (_Model) {
 }(_vuex_orm_core__WEBPACK_IMPORTED_MODULE_0__["Model"]);
 
 _defineProperty(Episode, "entity", 'episodes');
+
+
+
+/***/ }),
+
+/***/ "./resources/js/models/EpisodeMovie.js":
+/*!*********************************************!*\
+  !*** ./resources/js/models/EpisodeMovie.js ***!
+  \*********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return EpisodeMovie; });
+/* harmony import */ var _vuex_orm_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @vuex-orm/core */ "./node_modules/@vuex-orm/core/dist/vuex-orm.esm.js");
+/* harmony import */ var _Movie__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Movie */ "./resources/js/models/Movie.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+var EpisodeMovie = /*#__PURE__*/function (_Model) {
+  _inherits(EpisodeMovie, _Model);
+
+  var _super = _createSuper(EpisodeMovie);
+
+  function EpisodeMovie() {
+    _classCallCheck(this, EpisodeMovie);
+
+    return _super.apply(this, arguments);
+  }
+
+  _createClass(EpisodeMovie, null, [{
+    key: "fields",
+    // This is the name used as module name of the Vuex Store.
+    // List of all fields (schema) of the post model. `this.attr` is used
+    // for the generic field type. The argument is the default value.
+    value: function fields() {
+      return {
+        episode_id: this.attr(''),
+        movie_id: this.attr(''),
+        created_at: this.attr('')
+      };
+    }
+  }]);
+
+  return EpisodeMovie;
+}(_vuex_orm_core__WEBPACK_IMPORTED_MODULE_0__["Model"]);
+
+_defineProperty(EpisodeMovie, "entity", 'episode_movie');
 
 
 
@@ -52587,6 +52716,79 @@ var File = /*#__PURE__*/function (_Model) {
 }(_vuex_orm_core__WEBPACK_IMPORTED_MODULE_0__["Model"]);
 
 _defineProperty(File, "entity", 'files');
+
+
+
+/***/ }),
+
+/***/ "./resources/js/models/Movie.js":
+/*!**************************************!*\
+  !*** ./resources/js/models/Movie.js ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Movie; });
+/* harmony import */ var _vuex_orm_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @vuex-orm/core */ "./node_modules/@vuex-orm/core/dist/vuex-orm.esm.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+var Movie = /*#__PURE__*/function (_Model) {
+  _inherits(Movie, _Model);
+
+  var _super = _createSuper(Movie);
+
+  function Movie() {
+    _classCallCheck(this, Movie);
+
+    return _super.apply(this, arguments);
+  }
+
+  _createClass(Movie, null, [{
+    key: "fields",
+    // This is the name used as module name of the Vuex Store.
+    // List of all fields (schema) of the post model. `this.attr` is used
+    // for the generic field type. The argument is the default value.
+    value: function fields() {
+      return {
+        id: this.uid(),
+        title: this.attr(''),
+        release_date: this.attr(''),
+        poster_path: this.attr(''),
+        created_at: this.attr('')
+      };
+    }
+  }]);
+
+  return Movie;
+}(_vuex_orm_core__WEBPACK_IMPORTED_MODULE_0__["Model"]);
+
+_defineProperty(Movie, "entity", 'movies');
 
 
 
@@ -52800,6 +53002,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var _models_Episode__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../models/Episode */ "./resources/js/models/Episode.js");
 /* harmony import */ var _models_File__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../models/File */ "./resources/js/models/File.js");
+/* harmony import */ var _models_Movie__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../models/Movie */ "./resources/js/models/Movie.js");
+/* harmony import */ var _models_EpisodeMovie__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../models/EpisodeMovie */ "./resources/js/models/EpisodeMovie.js");
+
+
 
 
 
@@ -52817,7 +53023,9 @@ _vuex_orm_core__WEBPACK_IMPORTED_MODULE_4__["default"].use(_vuex_orm_plugin_axio
 var database = new _vuex_orm_core__WEBPACK_IMPORTED_MODULE_4__["default"].Database();
 database.register(_models_User__WEBPACK_IMPORTED_MODULE_3__["default"]);
 database.register(_models_Episode__WEBPACK_IMPORTED_MODULE_7__["default"]);
-database.register(_models_File__WEBPACK_IMPORTED_MODULE_8__["default"]); // Register Models to the database.
+database.register(_models_File__WEBPACK_IMPORTED_MODULE_8__["default"]);
+database.register(_models_Movie__WEBPACK_IMPORTED_MODULE_9__["default"]);
+database.register(_models_EpisodeMovie__WEBPACK_IMPORTED_MODULE_10__["default"]); // Register Models to the database.
 // Create Vuex Store and register database through Vuex ORM.
 
 var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({

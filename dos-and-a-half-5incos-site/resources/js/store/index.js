@@ -7,6 +7,8 @@ import VuexORMAxios from "@vuex-orm/plugin-axios";
 import axios from 'axios';
 import Episode from "../models/Episode";
 import File from "../models/File";
+import Movie from "../models/Movie";
+import EpisodeMovie from "../models/EpisodeMovie";
 
 
 Vue.use(Vuex)
@@ -17,6 +19,8 @@ const database = new VuexORM.Database()
 database.register(User);
 database.register(Episode);
 database.register(File);
+database.register(Movie);
+database.register(EpisodeMovie);
 // Register Models to the database.
 
 
