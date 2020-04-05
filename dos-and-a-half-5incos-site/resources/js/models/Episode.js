@@ -1,6 +1,7 @@
 import { Model } from '@vuex-orm/core'
 import Movie from "./Movie";
 import EpisodeMovie from "./EpisodeMovie";
+import File from './File';
 
 export default class Episode extends Model {
     // This is the name used as module name of the Vuex Store.
@@ -20,6 +21,7 @@ export default class Episode extends Model {
             created_at: this.attr(''),
 
             movies: this.belongsToMany(Movie, EpisodeMovie, 'episode_id', 'movie_id'),
+            photo: this.belongsTo(File, 'photo_file_id', 'id')
         }
     }
 }

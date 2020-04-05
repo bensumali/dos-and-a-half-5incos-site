@@ -52,6 +52,7 @@
                                 :placeholder="'Search for movies'"
                                 :inputId="'movie-search'"
                                 :selectable="movie => !isMovieInEpisode(movie)"
+                                :clearSearchOnSelect="true"
                             >
                                 <template v-slot:option="movie">
                                     <span class="media-poster">
@@ -91,7 +92,22 @@
                 </footer>
             </div>
         </div>
-        <button id="display-modal-button" @click="displayModal()">CLICK ME</button>
+        <div class="columns">
+            <div class="column episode-list__episode">
+                <button id="display-modal-button" @click="displayModal()">CLICK ME</button>
+            </div>
+            <div class="column episode-list__episode" v-for="(episode, index) in episodes">
+                <div class="episode-list__episode__photo">
+                        <img v-if="episode.photo" :src="'/storage/' + episode.photo.path.replace('public/', '')" />
+                        <i v-else class="fas fa-image"></i>
+                </div>
+                <div class="episode-list__episode__media">
+                    <span v-for="(movie, i2) in episode.movies">{{ movie.title }}</span>
+                    <span v-if="episode.movies.length == 0"><i>Shootin the shit</i></span>
+                </div>
+                <div class="episode-list__episode__title">{{ episode.title }}</div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -111,6 +127,11 @@
         components: {
           VueCropper, vSelect
         },
+        computed: {
+          episodes: function() {
+              return Episode.query().withAllRecursive().all();
+          }
+        },
         data: function() {
             return {
                 cropImage: "",
@@ -125,21 +146,28 @@
         },
         methods: {
             addEpisode: function() {
-                this.$refs.cropper.getCroppedCanvas().toBlob((blob) => {
-                    const mypostparameters= new FormData();
-                    mypostparameters.append('image', blob, this.episode_new.image.name);
-                    axios.post('/api/files/', mypostparameters).then(
-                        function(response) {
-                            File.insert({
-                                data: response.data
-                            });
-                            this.episode_new.photo_file_id = response.data.id;
-                            this.$store.dispatch('STORE_EPISODE', this.episode_new).then(function(d) {
+                if(this.$refs.cropper.getCroppedCanvas()) {
+                    this.$refs.cropper.getCroppedCanvas().toBlob((blob) => {
+                        const mypostparameters= new FormData();
+                        mypostparameters.append('image', blob, this.episode_new.image.name);
+                        axios.post('/api/files/', mypostparameters).then(
+                            function(response) {
+                                File.insert({
+                                    data: response.data
+                                });
+                                this.episode_new.photo_file_id = response.data.id;
+                                this.$store.dispatch('STORE_EPISODE', this.episode_new).then(function(d) {
 
-                            });
-                        }.bind(this)
-                    );
-                });
+                                });
+                            }.bind(this)
+                        );
+                    });
+                }
+                else {
+                    this.$store.dispatch('STORE_EPISODE', this.episode_new).then(function(d) {
+
+                    });
+                }
             },
             debounce: function(fn, delay) {
                   return _.debounce(fn, delay);
@@ -206,6 +234,7 @@
         },
         mounted: function() {
             this.insertNewEpisodeIntoORM();
+            this.$store.dispatch('GET_ALL_EPISODES');
         },
         name: "EpisodeList"
     }

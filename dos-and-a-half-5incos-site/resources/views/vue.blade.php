@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="css/app.css" rel="stylesheet" />
-        <title>Dos and a Half 5incos</title>
+        <title>dos and a half 5incos</title>
     </head>
     <body>
         <div id="app">

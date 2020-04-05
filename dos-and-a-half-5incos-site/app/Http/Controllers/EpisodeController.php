@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Episode;
+use App\Movie;
 use Illuminate\Http\Request;
 
 class EpisodeController extends Controller
@@ -14,7 +15,8 @@ class EpisodeController extends Controller
      */
     public function index()
     {
-        //
+        $episodes = Episode::all()->load('movies', 'photo');
+        return response($episodes, 200);
     }
 
     /**
@@ -41,6 +43,22 @@ class EpisodeController extends Controller
         $episode->photo_file_id = $request->input('photo_file_id');
         $episode->save();
 
+        $moviesToAdd = array();
+
+        foreach($request["movies"] as $request_movie) {
+            $db_movie = Movie::find($request_movie["id"]);
+            if(!$db_movie) {
+                $movie = new Movie();
+                $movie->id = $request_movie["id"];
+                $movie->title = $request_movie["title"];
+                $movie->poster_path = $request_movie["poster_path"];
+                $movie->release_date = $request_movie["release_date"];
+                $movie->save();
+            }
+            array_push($moviesToAdd, $movie->id);
+        }
+        $episode->movies()->sync($moviesToAdd);
+        $episode->movies;
         return response($episode, 200);
     }
 

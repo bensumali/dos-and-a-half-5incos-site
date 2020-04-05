@@ -9,7 +9,7 @@ class FileController extends Controller
 {
     public function store(Request $request) {
         $request_file = $request->file('image');
-        $path = $request_file->store('files');
+        $path = $request_file->store('public/files');
         if($path) {
             $file = new File();
             $file->original_name = $request_file->getClientOriginalName();

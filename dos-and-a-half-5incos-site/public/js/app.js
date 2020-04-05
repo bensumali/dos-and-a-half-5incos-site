@@ -8541,6 +8541,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -8555,6 +8571,11 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     VueCropper: vue_cropperjs__WEBPACK_IMPORTED_MODULE_0___default.a,
     vSelect: vue_select__WEBPACK_IMPORTED_MODULE_3___default.a
+  },
+  computed: {
+    episodes: function episodes() {
+      return _models_Episode__WEBPACK_IMPORTED_MODULE_6__["default"].query().withAllRecursive().all();
+    }
   },
   data: function data() {
     return {
@@ -8572,17 +8593,21 @@ __webpack_require__.r(__webpack_exports__);
     addEpisode: function addEpisode() {
       var _this = this;
 
-      this.$refs.cropper.getCroppedCanvas().toBlob(function (blob) {
-        var mypostparameters = new FormData();
-        mypostparameters.append('image', blob, _this.episode_new.image.name);
-        axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/api/files/', mypostparameters).then(function (response) {
-          _models_File__WEBPACK_IMPORTED_MODULE_7__["default"].insert({
-            data: response.data
-          });
-          this.episode_new.photo_file_id = response.data.id;
-          this.$store.dispatch('STORE_EPISODE', this.episode_new).then(function (d) {});
-        }.bind(_this));
-      });
+      if (this.$refs.cropper.getCroppedCanvas()) {
+        this.$refs.cropper.getCroppedCanvas().toBlob(function (blob) {
+          var mypostparameters = new FormData();
+          mypostparameters.append('image', blob, _this.episode_new.image.name);
+          axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/api/files/', mypostparameters).then(function (response) {
+            _models_File__WEBPACK_IMPORTED_MODULE_7__["default"].insert({
+              data: response.data
+            });
+            this.episode_new.photo_file_id = response.data.id;
+            this.$store.dispatch('STORE_EPISODE', this.episode_new).then(function (d) {});
+          }.bind(_this));
+        });
+      } else {
+        this.$store.dispatch('STORE_EPISODE', this.episode_new).then(function (d) {});
+      }
     },
     debounce: function debounce(fn, delay) {
       return lodash__WEBPACK_IMPORTED_MODULE_5___default.a.debounce(fn, delay);
@@ -8655,6 +8680,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     this.insertNewEpisodeIntoORM();
+    this.$store.dispatch('GET_ALL_EPISODES');
   },
   name: "EpisodeList"
 });
@@ -31005,7 +31031,8 @@ var render = function() {
                     inputId: "movie-search",
                     selectable: function(movie) {
                       return !_vm.isMovieInEpisode(movie)
-                    }
+                    },
+                    clearSearchOnSelect: true
                   },
                   on: { search: _vm.searchTMDB, input: _vm.selectMovie },
                   scopedSlots: _vm._u([
@@ -31133,16 +31160,59 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c(
-      "button",
-      {
-        attrs: { id: "display-modal-button" },
-        on: {
-          click: function($event) {
-            return _vm.displayModal()
-          }
-        }
-      },
-      [_vm._v("CLICK ME")]
+      "div",
+      { staticClass: "columns" },
+      [
+        _c("div", { staticClass: "column episode-list__episode" }, [
+          _c(
+            "button",
+            {
+              attrs: { id: "display-modal-button" },
+              on: {
+                click: function($event) {
+                  return _vm.displayModal()
+                }
+              }
+            },
+            [_vm._v("CLICK ME")]
+          )
+        ]),
+        _vm._v(" "),
+        _vm._l(_vm.episodes, function(episode, index) {
+          return _c("div", { staticClass: "column episode-list__episode" }, [
+            _c("div", { staticClass: "episode-list__episode__photo" }, [
+              episode.photo
+                ? _c("img", {
+                    attrs: {
+                      src:
+                        "/storage/" + episode.photo.path.replace("public/", "")
+                    }
+                  })
+                : _c("i", { staticClass: "fas fa-image" })
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "episode-list__episode__media" },
+              [
+                _vm._l(episode.movies, function(movie, i2) {
+                  return _c("span", [_vm._v(_vm._s(movie.title))])
+                }),
+                _vm._v(" "),
+                episode.movies.length == 0
+                  ? _c("span", [_c("i", [_vm._v("Shootin the shit")])])
+                  : _vm._e()
+              ],
+              2
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "episode-list__episode__title" }, [
+              _vm._v(_vm._s(episode.title))
+            ])
+          ])
+        })
+      ],
+      2
     )
   ])
 }
@@ -52550,6 +52620,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _vuex_orm_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @vuex-orm/core */ "./node_modules/@vuex-orm/core/dist/vuex-orm.esm.js");
 /* harmony import */ var _Movie__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Movie */ "./resources/js/models/Movie.js");
 /* harmony import */ var _EpisodeMovie__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./EpisodeMovie */ "./resources/js/models/EpisodeMovie.js");
+/* harmony import */ var _File__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./File */ "./resources/js/models/File.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -52573,6 +52644,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 
@@ -52603,7 +52675,8 @@ var Episode = /*#__PURE__*/function (_Model) {
         date_recorded: this.attr(''),
         date_published: this.attr(''),
         created_at: this.attr(''),
-        movies: this.belongsToMany(_Movie__WEBPACK_IMPORTED_MODULE_1__["default"], _EpisodeMovie__WEBPACK_IMPORTED_MODULE_2__["default"], 'episode_id', 'movie_id')
+        movies: this.belongsToMany(_Movie__WEBPACK_IMPORTED_MODULE_1__["default"], _EpisodeMovie__WEBPACK_IMPORTED_MODULE_2__["default"], 'episode_id', 'movie_id'),
+        photo: this.belongsTo(_File__WEBPACK_IMPORTED_MODULE_3__["default"], 'photo_file_id', 'id')
       };
     }
   }]);
@@ -53019,7 +53092,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var actions = {
+  GET_ALL_EPISODES: function GET_ALL_EPISODES(context, payload) {
+    return _models_Episode__WEBPACK_IMPORTED_MODULE_0__["default"].api().get("/api/episodes");
+  },
   STORE_EPISODE: function STORE_EPISODE(context, payload) {
+    _models_Episode__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](payload.id);
     return _models_Episode__WEBPACK_IMPORTED_MODULE_0__["default"].api().post('/api/episodes/', payload);
   }
 };
